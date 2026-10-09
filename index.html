@@ -1,0 +1,1657 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    />
+
+    <!-- SEO & Meta Tags -->
+    <title>MusicEmbedAPI - Interactive Demo & Docs</title>
+    <meta
+      name="description"
+      content="A modern, modular audio player engine with lyrics support, time synchronization, and responsive UI."
+    />
+    <meta
+      name="keywords"
+      content="music player, audio player, html5 audio, vanilla js, lyrics sync, LRC parser, embed player"
+    />
+    <meta name="author" content="JPROJECT-1" />
+    <meta name="robots" content="index, follow" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/></svg>"
+    />
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="MusicEmbedAPI - Modern Audio Player Engine"
+    />
+    <meta
+      property="og:description"
+      content="Embed your music beautifully anywhere. A highly modular, lightweight Vanilla JS music player API supporting LRC lyrics synchronization."
+    />
+    <meta
+      property="og:url"
+      content="https://jproject-1.github.io/musicembedapi/"
+    />
+    <meta
+      property="og:image"
+      content="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=1200&q=80"
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="MusicEmbedAPI - Modern Audio Player Engine"
+    />
+    <meta
+      name="twitter:description"
+      content="Embed your music beautifully anywhere. A highly modular, lightweight Vanilla JS music player API."
+    />
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "MusicEmbedAPI",
+        "description": "A modern, modular audio player engine with lyrics support, time synchronization, and responsive UI.",
+        "programmingLanguage": {
+          "@type": "ComputerLanguage",
+          "name": "JavaScript"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "JPROJECT-1"
+        },
+        "url": "https://github.com/JPROJECT-1/musicembedapi",
+        "codeRepository": "https://github.com/JPROJECT-1/musicembedapi",
+        "license": "https://opensource.org/licenses/MIT"
+      }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Inter"', "sans-serif"],
+              display: ['"Space Grotesk"', "sans-serif"],
+              mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+            },
+            colors: {
+              brand: {
+                bg: "#020617",
+                panel: "rgba(15, 23, 42, 0.6)",
+                border: "rgba(255, 255, 255, 0.1)",
+                accent: "#10b981",
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #020617;
+        background-image:
+          radial-gradient(
+            circle at 15% 50%,
+            rgba(16, 185, 129, 0.08),
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 85% 30%,
+            rgba(59, 130, 246, 0.08),
+            transparent 25%
+          );
+        background-attachment: fixed;
+        color: #f8fafc;
+      }
+      .glass-panel {
+        background: var(--tw-colors-brand-panel);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--tw-colors-brand-border);
+      }
+      .glass-input {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        transition: all 0.3s;
+      }
+      .glass-input:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.3);
+        outline: none;
+      }
+      .custom-checkbox {
+        appearance: none;
+        width: 1rem;
+        height: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 0.25rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        position: relative;
+      }
+      .custom-checkbox:checked {
+        background-color: #10b981;
+        border-color: #10b981;
+      }
+      .custom-checkbox:checked::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 5px;
+        width: 4px;
+        height: 8px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.4);
+      }
+      /* Ensure minimum width responsivness */
+      .min-w-mobile {
+        min-width: 300px;
+      }
+    </style>
+  </head>
+  <body class="antialiased min-h-screen pb-20 min-w-mobile overflow-x-hidden">
+    <!-- Navbar -->
+    <nav
+      class="border-b border-white/10 bg-black/20 backdrop-blur-md sticky top-0 z-50"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center gap-2 sm:gap-3">
+            <div
+              class="w-8 h-8 rounded bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-black"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="w-5 h-5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 19.5V5.625c0-.621.504-1.125 1.125-1.125h9C19.746 4.5 20.25 5.004 20.25 5.625v13.875M9 19.5v-13.875M9 19.5c0 1.242-.536 2.25-1.125 2.25S6.75 20.742 6.75 19.5s.536-2.25 1.125-2.25 1.125 1.008 1.125 2.25zm11.25 0c0 1.242-.536 2.25-1.125 2.25s-1.125-1.008-1.125-2.25.536-2.25 1.125-2.25 1.125 1.008 1.125 2.25z"
+                />
+              </svg>
+            </div>
+            <span
+              class="font-display font-bold text-lg sm:text-xl tracking-tight truncate"
+            >
+              MusicEmbed<span class="text-emerald-400">API</span>
+            </span>
+          </div>
+          <div class="flex gap-3 sm:gap-4 items-center">
+            <a
+              href="#playground"
+              class="text-xs sm:text-sm font-medium hover:text-emerald-400 transition hidden sm:block"
+              >Playground</a
+            >
+            <a
+              href="#docs"
+              class="text-xs sm:text-sm font-medium hover:text-emerald-400 transition hidden sm:block"
+              >Docs</a
+            >
+            <a
+              href="https://github.com/JPROJECT-1/musicembedapi"
+              target="_blank"
+              class="text-slate-400 hover:text-white transition flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-4xl mx-auto text-center px-4 py-12 sm:py-24">
+      <div
+        class="inline-block mb-4 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-semibold tracking-wide flex items-center justify-center gap-2 w-max mx-auto"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-4 h-4"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+          />
+        </svg>
+        v1.0.0 is out now!
+      </div>
+      <h1
+        class="text-3xl sm:text-5xl md:text-6xl font-display font-bold mb-6 tracking-tight"
+      >
+        Embed your music <br />
+        <span
+          class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-blue-500"
+          >beautifully anywhere.</span
+        >
+      </h1>
+      <p
+        class="text-slate-400 text-base sm:text-lg md:text-xl mb-10 max-w-2xl mx-auto"
+      >
+        A highly modular, lightweight Vanilla JS music player API supporting LRC
+        lyrics synchronization, instantly convertible into various Card UI
+        formats.
+      </p>
+      <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4">
+        <a
+          href="#playground"
+          class="px-6 py-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-semibold transition flex items-center justify-center gap-2"
+        >
+          Live Playground
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-4 h-4"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+            />
+          </svg>
+        </a>
+        <a
+          href="#docs"
+          class="px-6 py-3 rounded-lg glass-panel hover:bg-white/5 font-semibold transition text-center"
+        >
+          Read Documentation
+        </a>
+      </div>
+    </header>
+
+    <!-- Interactive Playground -->
+    <main id="playground" class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 mb-24">
+      <div class="flex items-center gap-3 mb-6 px-2 sm:px-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-6 h-6 text-emerald-400"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.879-3.879a1.5 1.5 0 10-2.12-2.122l-3.88 3.88a15.996 15.996 0 00-4.647 4.764m3.42 3.42a15.999 15.999 0 004.764 4.648l3.879 3.879a1.5 1.5 0 102.12-2.122l-3.88-3.88a15.996 15.996 0 00-4.647-4.764"
+          />
+        </svg>
+        <h2 class="text-xl sm:text-2xl font-display font-bold">
+          Interactive Playground
+        </h2>
+      </div>
+
+      <div
+        class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 relative items-start"
+      >
+        <!-- LEFT PANEL: Controls (Sticky on Desktop) -->
+        <div
+          class="lg:col-span-5 xl:col-span-4 glass-panel rounded-2xl p-4 sm:p-6 lg:sticky lg:top-24 max-h-[85vh] overflow-y-auto"
+        >
+          <form id="configForm" class="flex flex-col gap-6 text-sm">
+            <!-- General Settings -->
+            <div class="space-y-4">
+              <h3
+                class="text-emerald-400 font-bold border-b border-white/10 pb-2 flex items-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-4 h-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+                  />
+                </svg>
+                Core Settings
+              </h3>
+
+              <div>
+                <label
+                  class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                  >Display Type</label
+                >
+                <select
+                  id="conf_type"
+                  class="w-full glass-input rounded-lg px-3 py-2.5 outline-none appearance-none"
+                >
+                  <option value="full">Full Player (Classic)</option>
+                  <option value="track">Track Card (Square Cover)</option>
+                  <option value="lyrics">Lyrics Card (Scrolling)</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label
+                    class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                    >Width</label
+                  >
+                  <input
+                    type="text"
+                    id="conf_width"
+                    value="320px"
+                    class="w-full glass-input rounded-lg px-3 py-2 outline-none font-mono text-xs"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                    >Height</label
+                  >
+                  <input
+                    type="text"
+                    id="conf_height"
+                    value="auto"
+                    class="w-full glass-input rounded-lg px-3 py-2 outline-none font-mono text-xs"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label
+                    class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                    >Mode</label
+                  >
+                  <select
+                    id="conf_mode"
+                    class="w-full glass-input rounded-lg px-3 py-2 outline-none appearance-none"
+                  >
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                    >Theme Color</label
+                  >
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="color"
+                      id="conf_color"
+                      value="#0f766e"
+                      class="w-8 h-8 rounded cursor-pointer bg-transparent border-none p-0 outline-none"
+                    />
+                    <span class="text-[10px] text-slate-400 leading-tight"
+                      >Card UI<br />bg color</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metadata Settings -->
+            <div class="space-y-4">
+              <h3
+                class="text-emerald-400 font-bold border-b border-white/10 pb-2"
+              >
+                Media & Metadata
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label
+                    class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                    >Title</label
+                  >
+                  <input
+                    type="text"
+                    id="conf_title"
+                    value="Hello World"
+                    class="w-full glass-input rounded-lg px-3 py-2 outline-none"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                    >Author</label
+                  >
+                  <input
+                    type="text"
+                    id="conf_author"
+                    value="My Artist"
+                    class="w-full glass-input rounded-lg px-3 py-2 outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                  >Cover Image URL</label
+                >
+                <input
+                  type="text"
+                  id="conf_cover"
+                  value="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=500&q=80"
+                  class="w-full glass-input rounded-lg px-3 py-2 outline-none font-mono text-xs"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                  >Audio URL (.mp3)</label
+                >
+                <input
+                  type="text"
+                  id="conf_src"
+                  value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+                  class="w-full glass-input rounded-lg px-3 py-2 outline-none font-mono text-xs"
+                />
+              </div>
+            </div>
+
+            <!-- Playback Controls Options -->
+            <div class="space-y-3">
+              <h3
+                class="text-emerald-400 font-bold border-b border-white/10 pb-2"
+              >
+                Controls
+              </h3>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <label class="flex items-center gap-2 text-slate-300"
+                  ><input
+                    type="checkbox"
+                    id="conf_d_scrub"
+                    class="custom-checkbox"
+                  />
+                  Disable Scrubbing</label
+                >
+                <label class="flex items-center gap-2 text-slate-300"
+                  ><input
+                    type="checkbox"
+                    id="conf_d_dur"
+                    class="custom-checkbox"
+                  />
+                  Hide Duration</label
+                >
+                <label class="flex items-center gap-2 text-slate-300"
+                  ><input
+                    type="checkbox"
+                    id="conf_d_skip"
+                    class="custom-checkbox"
+                  />
+                  Hide Skip Btn</label
+                >
+                <label class="flex items-center gap-2 text-slate-300"
+                  ><input
+                    type="checkbox"
+                    id="conf_d_share"
+                    class="custom-checkbox"
+                  />
+                  Hide Share Btn</label
+                >
+              </div>
+            </div>
+
+            <!-- Lyrics -->
+            <div class="space-y-3">
+              <h3
+                class="text-emerald-400 font-bold border-b border-white/10 pb-2 flex justify-between items-center"
+              >
+                Lyrics
+                <label
+                  class="flex items-center gap-2 text-xs font-normal text-slate-300 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    id="conf_autoscroll"
+                    checked
+                    class="custom-checkbox"
+                  />
+                  Auto Scroll
+                </label>
+              </h3>
+              <div>
+                <label
+                  class="block text-slate-400 text-xs font-bold uppercase tracking-wide mb-1.5"
+                  >LRC Format</label
+                >
+                <textarea
+                  id="conf_lyrics"
+                  rows="5"
+                  class="w-full glass-input rounded-lg px-3 py-2 outline-none font-mono text-xs resize-none"
+                  spellcheck="false"
+                >
+[00:00.00] Hello World
+[00:05.20] This is a sample lyric line
+[00:10.40] Synchronized with the audio track
+[00:15.60] Testing the LRC parser
+[00:20.00] ♪ ♪ ♪</textarea
+                >
+              </div>
+            </div>
+
+            <!-- Artist Info, Credits, Share Config (Toggles) -->
+            <div class="space-y-3">
+              <h3
+                class="text-emerald-400 font-bold border-b border-white/10 pb-2"
+              >
+                Extended Modules
+              </h3>
+              <div class="flex flex-col gap-2 text-xs">
+                <label class="flex items-center gap-2 text-slate-300"
+                  ><input
+                    type="checkbox"
+                    id="conf_artist"
+                    checked
+                    class="custom-checkbox"
+                  />
+                  Include Artist Information</label
+                >
+                <label class="flex items-center gap-2 text-slate-300"
+                  ><input
+                    type="checkbox"
+                    id="conf_credits"
+                    checked
+                    class="custom-checkbox"
+                  />
+                  Include Credits & License</label
+                >
+                <label class="flex items-center gap-2 text-slate-300"
+                  ><input
+                    type="checkbox"
+                    id="conf_share_config"
+                    checked
+                    class="custom-checkbox"
+                  />
+                  Include Custom Share Config</label
+                >
+              </div>
+            </div>
+
+            <div
+              class="pt-4 border-t border-white/10 flex items-center justify-between mt-2"
+            >
+              <span class="text-xs text-slate-400">Updates dynamically</span>
+              <button
+                type="button"
+                onclick="triggerUpdate()"
+                class="bg-emerald-500 hover:bg-emerald-400 text-black px-4 py-2 rounded text-xs font-bold transition flex items-center gap-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  class="w-4 h-4"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
+                </svg>
+                Force Render
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- RIGHT PANEL: Preview & Code -->
+        <div
+          class="lg:col-span-7 xl:col-span-8 flex flex-col h-full min-h-[600px]"
+        >
+          <!-- Tab Headers -->
+          <div
+            class="flex border-b border-white/10 mb-4 overflow-x-auto whitespace-nowrap"
+          >
+            <button
+              id="tab-preview"
+              class="px-6 py-3 text-sm font-bold text-emerald-400 border-b-2 border-emerald-400 transition"
+              onclick="switchTab('preview')"
+            >
+              Live Preview
+            </button>
+            <button
+              id="tab-code"
+              class="px-6 py-3 text-sm font-bold text-slate-400 border-b-2 border-transparent hover:text-white transition"
+              onclick="switchTab('code')"
+            >
+              Generated Code
+            </button>
+          </div>
+
+          <!-- Tab Content: PREVIEW -->
+          <div
+            id="content-preview"
+            class="glass-panel rounded-2xl p-2 sm:p-6 lg:p-10 flex-1 flex items-center justify-center overflow-x-hidden"
+          >
+            <!-- Ensure container limits width but allows player to fit -->
+            <div
+              id="player-container"
+              class="max-w-full w-auto flex justify-center"
+            >
+              <!-- MusicEmbedAPI will be rendered here -->
+            </div>
+          </div>
+
+          <!-- Tab Content: CODE -->
+          <div
+            id="content-code"
+            class="hidden glass-panel rounded-2xl p-0 flex-1 overflow-hidden flex flex-col relative"
+          >
+            <button
+              onclick="copyCode()"
+              class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded text-xs font-semibold transition z-10 flex items-center gap-1 border border-white/10"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="w-4 h-4"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+                />
+              </svg>
+              Copy
+            </button>
+            <pre
+              class="m-0 p-6 overflow-auto text-xs sm:text-sm font-mono text-slate-300 flex-1 bg-[#0d1117] rounded-2xl custom-scrollbar"
+            ><code id="code-output"></code></pre>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Documentation Section -->
+    <section
+      id="docs"
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 border-t border-white/10 pt-16"
+    >
+      <h2 class="text-2xl sm:text-3xl font-display font-bold mb-6 sm:mb-8">
+        Documentation
+      </h2>
+
+      <!-- Overview -->
+      <div
+        class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 overflow-hidden"
+      >
+        <h3 class="text-xl sm:text-2xl font-bold mb-4 text-white">
+          MusicEmbedAPI Overview
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+          <strong>MusicEmbedAPI</strong> is a lightweight, modular, client-side
+          audio embed player built with
+          <strong>Vanilla JavaScript (ES6)</strong>.
+        </p>
+        <p class="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+          It provides a modern music-player experience with a UI inspired by the
+          overall experience of services such as <strong>Spotify</strong>, while
+          remaining a standalone browser component that does not require React,
+          Vue, or another frontend framework.
+        </p>
+        <blockquote
+          class="border-l-4 border-emerald-500 pl-3 sm:pl-4 italic text-slate-400 mb-6 text-xs sm:text-sm bg-white/5 py-3 rounded-r break-words"
+        >
+          <strong>Design note:</strong> MusicEmbedAPI is inspired by modern
+          music-streaming interfaces, with Spotify being the primary visual and
+          UX reference. It is an independent project and is
+          <strong
+            >not affiliated with, endorsed by, or sponsored by Spotify</strong
+          >.
+        </blockquote>
+        <div class="flex flex-wrap gap-3 sm:gap-4">
+          <a
+            href="https://jproject-1.github.io/musicembedapi/"
+            target="_blank"
+            class="text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm font-semibold flex items-center gap-1"
+          >
+            <i class="fa-solid fa-link"></i> Live Demo
+          </a>
+          <a
+            href="https://github.com/JPROJECT-1/musicembedapi"
+            target="_blank"
+            class="text-emerald-400 hover:text-emerald-300 text-xs sm:text-sm font-semibold flex items-center gap-1"
+          >
+            <i class="fa-brands fa-github"></i> Repository
+          </a>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div
+        class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 overflow-hidden"
+      >
+        <h3
+          class="text-lg sm:text-xl font-bold mb-5 sm:mb-6 text-emerald-400 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-star"></i> Features
+        </h3>
+
+        <h4 class="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
+          1. Three UI Types
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-300 mb-3 leading-relaxed">
+          MusicEmbedAPI provides three display modes. The default type is
+          <code>full</code>.
+        </p>
+        <div class="overflow-x-auto mb-6 w-full custom-scrollbar">
+          <table
+            class="w-full min-w-[400px] sm:min-w-[500px] text-left text-xs sm:text-sm text-slate-300 border-collapse"
+          >
+            <thead>
+              <tr class="border-b border-white/10 text-slate-400 bg-white/5">
+                <th class="p-3 sm:p-4 font-semibold rounded-tl-lg">Type</th>
+                <th class="p-3 sm:p-4 font-semibold rounded-tr-lg">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300 align-top">
+                  full
+                </td>
+                <td class="p-3 sm:p-4 leading-relaxed">
+                  Complete player with artwork, playback controls, progress bar,
+                  lyrics, artist information, credits, and sharing
+                </td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300 align-top">
+                  track
+                </td>
+                <td class="p-3 sm:p-4 leading-relaxed">
+                  Compact music-card style component focused on the cover,
+                  title, artist, and play interaction
+                </td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300 align-top">
+                  lyrics
+                </td>
+                <td class="p-3 sm:p-4 leading-relaxed">
+                  Large synchronized lyrics-focused component with cover, title,
+                  artist, and active-line highlighting
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
+          2. Audio Playback
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-300 mb-2 leading-relaxed">
+          The player uses the browser's native <code>HTMLAudioElement</code>.
+          Supported audio sources can be any browser-compatible audio URL, such
+          as MP3, WAV, and other formats supported by the target browser.
+        </p>
+        <p class="text-xs sm:text-sm text-slate-300 mb-6 leading-relaxed">
+          MusicEmbedAPI does not host or distribute audio files. You provide the
+          audio URL through the <code>src</code> option.
+        </p>
+
+        <h4 class="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
+          3. Synchronized Lyrics
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-300 mb-2">
+          Lyrics can be supplied as a string in <strong>LRC format</strong>.
+        </p>
+        <pre
+          class="bg-[#0d1117] p-3 sm:p-4 rounded-lg font-mono text-[10px] sm:text-xs text-slate-300 mb-4 overflow-x-auto border border-white/10 custom-scrollbar"
+        ><code>[00:05.20]First line of the song
+[00:10.50]Second line of the song
+[00:15.90]Third line of the song</code></pre>
+        <p class="text-xs sm:text-sm text-slate-300 mb-6 leading-relaxed">
+          The player parses the timestamps and automatically highlights the
+          current lyric line as the audio plays. Lyrics can also automatically
+          scroll to keep the active line visible.
+        </p>
+
+        <h4 class="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
+          4. Theme Support
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-300 mb-6 leading-relaxed">
+          The player supports <code>dark</code> and <code>light</code> modes.
+          Dark mode is the default. The compact <code>track</code> and
+          <code>lyrics</code> cards can also use a custom
+          <code>themeColor</code>.
+        </p>
+
+        <h4 class="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
+          5. Artist Information
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-300 mb-6 leading-relaxed">
+          The full player can optionally display an artist section with an
+          artist banner, name, verification indicator, statistics, and
+          description.
+        </p>
+
+        <h4 class="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
+          6. Credits and Licensing
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-300 mb-6 leading-relaxed">
+          You can show production credits and a license label directly inside
+          the full player. This is useful when distributing music or other media
+          with attribution requirements.
+        </p>
+
+        <h4 class="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
+          7. Share Support
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-300 mb-6 leading-relaxed">
+          The full player includes sharing support through the browser's
+          <strong>Web Share API</strong>. When Web Share is unavailable,
+          MusicEmbedAPI falls back to copying the configured share URL to the
+          clipboard.
+        </p>
+
+        <h4 class="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">
+          8. Configurable Controls
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-300 mb-2 leading-relaxed">
+          You can disable selected controls without modifying the source code:
+        </p>
+        <ul
+          class="list-disc list-inside text-xs sm:text-sm text-slate-300 space-y-1"
+        >
+          <li>Scrubbing</li>
+          <li>Duration text</li>
+          <li>Skip buttons</li>
+          <li>Share button</li>
+        </ul>
+      </div>
+
+      <!-- Requirements -->
+      <div class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+        <h3
+          class="text-lg sm:text-xl font-bold mb-4 text-emerald-400 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-list-check"></i> Requirements
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 mb-2">
+          MusicEmbedAPI is intended for modern browsers that support:
+        </p>
+        <ul
+          class="list-disc list-inside text-xs sm:text-sm text-slate-300 mb-4 space-y-1 pl-1"
+        >
+          <li>ES6 JavaScript</li>
+          <li><code>HTMLAudioElement</code></li>
+          <li>DOM APIs</li>
+          <li>CSS</li>
+          <li>Optional: Web Share API / Clipboard API</li>
+        </ul>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          No frontend framework is required. No build step is required for
+          normal browser usage.
+        </p>
+      </div>
+
+      <!-- Installation -->
+      <div
+        class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 overflow-hidden"
+      >
+        <h3
+          class="text-lg sm:text-xl font-bold mb-4 text-emerald-400 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-download"></i> Installation & Basic Example
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+          MusicEmbedAPI is a browser-side JavaScript library. Place the
+          JavaScript file in your project and load it with a normal
+          <code>&lt;script&gt;</code> tag.
+        </p>
+        <pre
+          class="bg-[#0d1117] p-3 sm:p-4 rounded-lg font-mono text-[10px] sm:text-xs text-slate-300 mb-4 overflow-x-auto border border-white/10 custom-scrollbar"
+        ><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;MusicEmbedAPI Example&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;div id="music-player"&gt;&lt;/div&gt;
+
+  &lt;script src="./musicembed.js"&gt;&lt;/script&gt;
+
+  &lt;script&gt;
+    const player = new MusicEmbed({
+      type: "full",
+      container: "#music-player",
+      width: "100%", // Responsive width
+      height: "auto",
+
+      src: "./music/song.mp3",
+      cover: "./images/cover.jpg",
+      title: "My Song",
+      author: "My Artist",
+      mode: "dark"
+    });
+  &lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      </div>
+
+      <!-- Configuration -->
+      <div
+        class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 overflow-hidden"
+      >
+        <h3
+          class="text-lg sm:text-xl font-bold mb-4 text-emerald-400 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-sliders"></i> Configuration Options
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+          The constructor accepts an optional configuration object.
+        </p>
+        <div class="overflow-x-auto mb-6 w-full custom-scrollbar">
+          <table
+            class="w-full min-w-[500px] text-left text-xs sm:text-sm text-slate-300 border-collapse"
+          >
+            <thead>
+              <tr class="border-b border-white/10 text-slate-400 bg-white/5">
+                <th class="p-3 sm:p-4 font-semibold rounded-tl-lg">Option</th>
+                <th class="p-3 sm:p-4 font-semibold">Type</th>
+                <th class="p-3 sm:p-4 font-semibold">Default</th>
+                <th class="p-3 sm:p-4 font-semibold rounded-tr-lg">
+                  Description
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">type</td>
+                <td class="p-3 sm:p-4">
+                  <code>"full" | "track" | "lyrics"</code>
+                </td>
+                <td class="p-3 sm:p-4"><code>"full"</code></td>
+                <td class="p-3 sm:p-4">Selects the player layout</td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">container</td>
+                <td class="p-3 sm:p-4"><code>string</code></td>
+                <td class="p-3 sm:p-4"><code>"body"</code></td>
+                <td class="p-3 sm:p-4">
+                  CSS selector for the element where the player is rendered
+                </td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">width</td>
+                <td class="p-3 sm:p-4"><code>string</code></td>
+                <td class="p-3 sm:p-4"><code>"300px"</code></td>
+                <td class="p-3 sm:p-4">
+                  Player width (supports CSS values e.g. <code>"100%"</code>)
+                </td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">height</td>
+                <td class="p-3 sm:p-4"><code>string</code></td>
+                <td class="p-3 sm:p-4"><code>"400px"</code></td>
+                <td class="p-3 sm:p-4">
+                  Player height (use <code>"auto"</code> to prevent internal
+                  scrolling)
+                </td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">overflow</td>
+                <td class="p-3 sm:p-4"><code>string</code></td>
+                <td class="p-3 sm:p-4"><code>"hidden"</code></td>
+                <td class="p-3 sm:p-4">Vertical overflow behavior</td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">
+                  themeColor
+                </td>
+                <td class="p-3 sm:p-4"><code>string</code></td>
+                <td class="p-3 sm:p-4"><code>"#2b4015"</code></td>
+                <td class="p-3 sm:p-4">
+                  Background color used by compact layouts
+                </td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">mode</td>
+                <td class="p-3 sm:p-4"><code>"dark" | "light"</code></td>
+                <td class="p-3 sm:p-4"><code>"dark"</code></td>
+                <td class="p-3 sm:p-4">Visual theme</td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">
+                  src / cover
+                </td>
+                <td class="p-3 sm:p-4"><code>string</code></td>
+                <td class="p-3 sm:p-4"><code>""</code></td>
+                <td class="p-3 sm:p-4">Audio file URL / Cover Image URL</td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">
+                  title / author
+                </td>
+                <td class="p-3 sm:p-4"><code>string</code></td>
+                <td class="p-3 sm:p-4"><code>""</code></td>
+                <td class="p-3 sm:p-4">Track title / Artist Name</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Playback Control Options -->
+      <div
+        class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 overflow-hidden"
+      >
+        <h3 class="text-lg sm:text-xl font-bold mb-4 text-emerald-400">
+          Playback Control Options
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+          MusicEmbedAPI allows specific controls to be disabled.
+        </p>
+        <div class="overflow-x-auto mb-6 w-full custom-scrollbar">
+          <table
+            class="w-full min-w-[400px] sm:min-w-[500px] text-left text-xs sm:text-sm text-slate-300 border-collapse"
+          >
+            <thead>
+              <tr class="border-b border-white/10 text-slate-400 bg-white/5">
+                <th class="p-3 sm:p-4 font-semibold rounded-tl-lg">Option</th>
+                <th class="p-3 sm:p-4 font-semibold">Type</th>
+                <th class="p-3 sm:p-4 font-semibold rounded-tr-lg">Effect</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">
+                  disableScrubbing
+                </td>
+                <td class="p-3 sm:p-4"><code>boolean</code></td>
+                <td class="p-3 sm:p-4">
+                  Disables manual seeking with the progress bar
+                </td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">
+                  disableDurationText
+                </td>
+                <td class="p-3 sm:p-4"><code>boolean</code></td>
+                <td class="p-3 sm:p-4">Hides current-time and duration text</td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">
+                  disableSkip
+                </td>
+                <td class="p-3 sm:p-4"><code>boolean</code></td>
+                <td class="p-3 sm:p-4">Hides the previous/next seek buttons</td>
+              </tr>
+              <tr class="hover:bg-white/5">
+                <td class="p-3 sm:p-4 font-mono text-emerald-300">
+                  disableShare
+                </td>
+                <td class="p-3 sm:p-4"><code>boolean</code></td>
+                <td class="p-3 sm:p-4">Hides the share button</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs sm:text-sm text-white font-semibold mb-2">
+          Important: Skip Button Behavior
+        </p>
+        <p class="text-xs sm:text-sm text-slate-300 mb-0 leading-relaxed">
+          The previous/next buttons are
+          <strong>not playlist navigation controls</strong>. They seek
+          approximately <code>-5 seconds</code> (Previous) and
+          <code>+5 seconds</code> (Next).
+        </p>
+      </div>
+
+      <!-- Lyrics / Artist / Credits / Share sections -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
+        <div class="glass-panel rounded-2xl p-4 sm:p-6">
+          <h3 class="text-lg sm:text-xl font-bold mb-3 text-emerald-400">
+            Lyrics Configuration
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 mb-3 leading-relaxed">
+            Provide LRC-formatted lyrics using the <code>lyrics</code> option.
+            The format is <code>[mm:ss.xx]Lyric text</code>. Lyrics sort
+            automatically by timestamp.
+          </p>
+          <pre
+            class="bg-[#0d1117] p-3 rounded-lg font-mono text-[10px] sm:text-xs text-slate-300 mb-3 overflow-x-auto border border-white/10 custom-scrollbar"
+          ><code>lyrics: `
+[00:02.00]Welcome to the song
+[00:06.50]This line appears next
+[00:11.20]Now the third line is active
+`</code></pre>
+          <p class="text-xs sm:text-sm text-slate-300">
+            <strong>Auto Scroll:</strong> Enabled by default (<code
+              >autoScrollLyrics: true</code
+            >).
+          </p>
+        </div>
+
+        <div class="glass-panel rounded-2xl p-4 sm:p-6">
+          <h3 class="text-lg sm:text-xl font-bold mb-3 text-emerald-400">
+            Artist & Credits
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 mb-3 leading-relaxed">
+            Pass an object to <code>artistInformation</code> and
+            <code>credits</code> to display detailed track metadata and
+            attribution inside the full player.
+          </p>
+          <pre
+            class="bg-[#0d1117] p-3 rounded-lg font-mono text-[10px] sm:text-xs text-slate-300 mb-0 overflow-x-auto border border-white/10 custom-scrollbar"
+          ><code>credits: {
+  active: true,
+  list: [
+    { role: "Vocalist", name: "Tenxi" },
+    { role: "Producer", name: "DIA" }
+  ]
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
+        <div class="glass-panel rounded-2xl p-4 sm:p-6">
+          <h3 class="text-lg sm:text-xl font-bold mb-4 text-emerald-400">
+            UI Types Overview
+          </h3>
+          <ul
+            class="list-disc list-inside text-xs sm:text-sm text-slate-300 space-y-2 leading-relaxed pl-1"
+          >
+            <li>
+              <strong>Full Player:</strong> Header, cover artwork, blurred
+              background, full controls, synchronized lyrics, artist info,
+              credits, and share button.
+            </li>
+            <li>
+              <strong>Track Card:</strong> Intentionally compact, focusing on
+              cover art, song title, artist, and play/pause interaction.
+            </li>
+            <li>
+              <strong>Lyrics Card:</strong> Displays mini cover, track title,
+              artist name, large lyrics, and active lyric highlighting.
+            </li>
+          </ul>
+        </div>
+        <div class="glass-panel rounded-2xl p-4 sm:p-6">
+          <h3 class="text-lg sm:text-xl font-bold mb-4 text-emerald-400">
+            Multiple Players
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+            You can create multiple MusicEmbed instances on the same page. Each
+            instance receives its own generated internal ID and renders into its
+            configured container.
+          </p>
+          <p class="text-xs sm:text-sm text-slate-400 italic">
+            Note: Pressing <code>Space</code> toggles play/pause globally
+            (unless typing in an input/textarea), which can affect the instance
+            handling the shortcut.
+          </p>
+        </div>
+      </div>
+
+      <!-- Rules & Security -->
+      <div
+        class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 overflow-hidden"
+      >
+        <h3 class="text-lg sm:text-xl font-bold mb-4 text-emerald-400">
+          Usage Rules & Security
+        </h3>
+        <ul
+          class="list-decimal list-inside text-xs sm:text-sm text-slate-300 space-y-2 sm:space-y-3 mb-6 pl-1 leading-relaxed"
+        >
+          <li>
+            <strong>Use content you have the right to use:</strong> You must
+            have appropriate permission for audio, artwork, lyrics, etc.
+          </li>
+          <li>
+            <strong>Respect licenses:</strong> Include appropriate attribution
+            using the <code>license</code> and <code>credits</code> options.
+          </li>
+          <li>
+            <strong>Do not impersonate Spotify:</strong> Do not use Spotify
+            trademarks or present your project as an official Spotify product.
+          </li>
+          <li>
+            <strong>Do not abuse external hosting:</strong> Comply with external
+            providers' TOS, bandwidth limits, and hotlinking policies.
+          </li>
+          <li>
+            <strong>Secure your sources:</strong> HTTPS URLs are recommended.
+            Validate/sanitize user-provided data.
+          </li>
+          <li>
+            <strong>Respect user experience:</strong> Avoid autoplaying audio
+            unexpectedly.
+          </li>
+          <li>
+            <strong>Do not use for illegal distribution:</strong> MusicEmbedAPI
+            is only a UI component and does not grant redistribution rights.
+          </li>
+        </ul>
+        <p class="text-xs sm:text-sm text-slate-300 mb-2 leading-relaxed">
+          <strong>Security Note:</strong> MusicEmbedAPI injects configuration
+          values into generated HTML. Do not pass raw untrusted input directly
+          into fields like title, author, lyrics, credits, or license. Treat
+          them as application data and sanitize them.
+        </p>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          <strong>CORS Considerations:</strong> Normal browser media loading
+          rules apply. Host audio on infrastructure configured for your website,
+          or ensure the external media host permits CORS.
+        </p>
+      </div>
+
+      <!-- API Reference & Complete Config -->
+      <div
+        class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 overflow-hidden"
+      >
+        <h3 class="text-lg sm:text-xl font-bold mb-4 text-emerald-400">
+          Example: Complete Configuration
+        </h3>
+        <pre
+          class="bg-[#0d1117] p-3 sm:p-4 rounded-lg font-mono text-[10px] sm:text-xs text-slate-300 mb-0 overflow-x-auto border border-white/10 custom-scrollbar"
+        ><code>const player = new MusicEmbed({
+  type: "full",
+  container: "#music-player",
+  width: "100%", // Responsive
+  height: "auto", // No internal scrollbar limit
+  mode: "dark",
+
+  src: "music.mp3",
+  cover: "cover.png",
+  title: "Makasih Tuhan",
+  author: "Tenxi",
+
+  disableScrubbing: false,
+  disableDurationText: false,
+  disableSkip: false,
+  disableShare: false,
+
+  lyrics: `
+[00:00.00] Intro...
+[00:05.20] Lirik baris pertama
+[00:10.40] Lirik baris kedua
+  `,
+  autoScrollLyrics: true,
+
+  artistInformation: {
+    active: true,
+    banner: "cover.png",
+    name: "Tenxi",
+    verified: false,
+    stats: "",
+    description: "J4W4R4"
+  },
+
+  license: "Creative Commons Attribution 4.0",
+  credits: {
+    active: true,
+    list: [
+      { role: "Vocalist", name: "Tenxi" },
+      { role: "Producer", name: "DIA" }
+    ]
+  },
+
+  share: {
+    title: "Dengarkan Makasih Tuhan - Tenxi",
+    description: "Lagu terbaru dari Tenxi",
+    url: "https://jasonpw.web.id"
+  }
+});</code></pre>
+      </div>
+
+      <!-- What it is not -->
+      <div class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+        <h3 class="text-lg sm:text-xl font-bold mb-4 text-emerald-400">
+          What MusicEmbedAPI Is Not
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 mb-3">
+          MusicEmbedAPI is <strong>not</strong>:
+        </p>
+        <ul
+          class="list-disc list-inside text-xs sm:text-sm text-slate-300 mb-4 space-y-1 pl-1"
+        >
+          <li>A music streaming service or music database</li>
+          <li>A Spotify API wrapper</li>
+          <li>A music hosting platform or copyright provider</li>
+          <li>A backend audio-processing service</li>
+          <li>A playlist or recommendation service</li>
+        </ul>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          It is a <strong>client-side JavaScript player component</strong>. You
+          provide the media and metadata; MusicEmbedAPI provides the player
+          interface and playback experience.
+        </p>
+      </div>
+
+      <div class="glass-panel rounded-2xl p-4 sm:p-6 md:p-8 mb-8">
+        <h3 class="text-lg sm:text-xl font-bold mb-4 text-emerald-400">
+          Contributing & License
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-300 mb-4 leading-relaxed">
+          Contributions are welcome! You can contribute by reporting bugs,
+          suggesting improvements, improving docs, accessibility, or browser
+          compatibility, adding tests, or adding new features.
+        </p>
+        <h4 class="text-base sm:text-lg font-semibold text-white mb-2">
+          License
+        </h4>
+        <p class="text-xs sm:text-sm text-slate-300 mb-0 leading-relaxed">
+          Copyright &copy; 2026 JPROJECT-1. MusicEmbedAPI is licensed under the
+          <strong>MIT License</strong>. The MIT License permits use,
+          modification, distribution, and private or commercial use, provided
+          that the copyright notice and license notice are retained.
+        </p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer
+      class="text-center text-slate-500 text-[10px] sm:text-xs py-6 sm:py-8 border-t border-white/5 px-4 w-full"
+    >
+      <p>Copyright &copy; 2026 JPROJECT-1. Released under the MIT License.</p>
+      <p class="mt-1 sm:mt-2">
+        Inspired by modern music-player experiences, with Spotify as a primary
+        reference.
+      </p>
+      <p class="mt-1 sm:mt-2">Powered by MusicEmbedAPI</p>
+    </footer>
+
+    <!-- ==========================================
+         MUSIC EMBED API CORE SCRIPT (INJECTED)
+         ========================================== -->
+    <script src="api.js"></script>
+
+    <!-- ==========================================
+         WEBSITE LOGIC (FORM, TABS, CODE GEN)
+         ========================================== -->
+    <script>
+      let livePlayer = null;
+
+      // Init the initial state on load
+      document.addEventListener("DOMContentLoaded", () => {
+        triggerUpdate();
+        setupAutoUpdate();
+      });
+
+      // Setup real-time updates when inputs change
+      function setupAutoUpdate() {
+        const inputs = document.querySelectorAll(
+          "#configForm input, #configForm select, #configForm textarea",
+        );
+        inputs.forEach((input) => {
+          input.addEventListener("input", () => {
+            // Debounce a bit to avoid lag when typing fast
+            clearTimeout(window.updateTimer);
+            window.updateTimer = setTimeout(() => {
+              triggerUpdate();
+            }, 300);
+          });
+        });
+      }
+
+      // Trigger the update of both Preview and Code
+      function triggerUpdate() {
+        const type = document.getElementById("conf_type").value;
+        const title = document.getElementById("conf_title").value;
+        const author = document.getElementById("conf_author").value;
+        const cover = document.getElementById("conf_cover").value;
+        const src = document.getElementById("conf_src").value;
+        const themeColor = document.getElementById("conf_color").value;
+        const width = document.getElementById("conf_width").value;
+        const height = document.getElementById("conf_height").value;
+        const mode = document.getElementById("conf_mode").value;
+        const lyrics = document.getElementById("conf_lyrics").value;
+
+        // Booleans
+        const d_scrub = document.getElementById("conf_d_scrub").checked;
+        const d_dur = document.getElementById("conf_d_dur").checked;
+        const d_skip = document.getElementById("conf_d_skip").checked;
+        const d_share = document.getElementById("conf_d_share").checked;
+        const autoScroll = document.getElementById("conf_autoscroll").checked;
+
+        const inc_artist = document.getElementById("conf_artist").checked;
+        const inc_credits = document.getElementById("conf_credits").checked;
+        const inc_share = document.getElementById("conf_share_config").checked;
+
+        // 1. UPDATE LIVE PREVIEW
+        // Clean up DOM manually if destroy doesn't exist to prevent stacking/errors
+        const containerElem = document.querySelector("#player-container");
+        if (containerElem) {
+          containerElem.innerHTML = "";
+        }
+        livePlayer = null;
+
+        const configObj = {
+          container: "#player-container",
+          type: type,
+          width: width,
+          height: height,
+          themeColor: themeColor,
+          mode: mode,
+          src: src,
+          cover: cover,
+          title: title,
+          author: author,
+          lyrics: lyrics,
+
+          disableScrubbing: d_scrub,
+          disableDurationText: d_dur,
+          disableSkip: d_skip,
+          disableShare: d_share,
+          autoScrollLyrics: autoScroll,
+        };
+
+        if (inc_artist) {
+          configObj.artistInformation = {
+            active: true,
+            banner: cover,
+            name: author,
+            verified: true,
+            stats: "1M Monthly Listeners",
+            description: "Created dynamically using MusicEmbedAPI.",
+          };
+        }
+
+        if (inc_credits) {
+          configObj.credits = {
+            active: true,
+            list: [
+              { role: "Vocalist", name: author },
+              { role: "Producer", name: "Studio XYZ" },
+            ],
+          };
+          configObj.license = "Creative Commons Attribution 4.0";
+        }
+
+        if (inc_share) {
+          configObj.share = {
+            title: "Listen to " + title + " by " + author,
+            description: "A fresh track configured via MusicEmbedAPI",
+            url: window.location.href,
+          };
+        }
+
+        // Initialize API only if MusicEmbed is loaded properly
+        try {
+          if (typeof MusicEmbed !== "undefined") {
+            livePlayer = new MusicEmbed(configObj);
+          } else {
+            containerElem.innerHTML = `<div class="p-4 text-center text-red-400 bg-red-900/20 rounded border border-red-500/30">MusicEmbed class not found. Ensure api.js is loaded.</div>`;
+          }
+        } catch (e) {
+          console.error("Initialization error:", e);
+        }
+
+        // 2. UPDATE CODE GENERATOR
+        generateCodeString(configObj);
+      }
+
+      // Stringifier for the code block
+      function generateCodeString(cfg) {
+        let codeStr = `const player = new MusicEmbed({\n`;
+        codeStr += `  container: "#my-player",\n`;
+        codeStr += `  type: "${cfg.type}",\n`;
+        codeStr += `  width: "${cfg.width}",\n`;
+        codeStr += `  height: "${cfg.height}",\n`;
+        codeStr += `  mode: "${cfg.mode}",\n`;
+        if (cfg.type !== "full") {
+          codeStr += `  themeColor: "${cfg.themeColor}",\n`;
+        }
+        codeStr += `\n  src: "${cfg.src}",\n`;
+        codeStr += `  cover: "${cfg.cover}",\n`;
+        codeStr += `  title: "${cfg.title}",\n`;
+        codeStr += `  author: "${cfg.author}",\n`;
+
+        let controls = [];
+        if (cfg.disableScrubbing) controls.push(`  disableScrubbing: true,`);
+        if (cfg.disableDurationText)
+          controls.push(`  disableDurationText: true,`);
+        if (cfg.disableSkip) controls.push(`  disableSkip: true,`);
+        if (cfg.disableShare) controls.push(`  disableShare: true,`);
+        if (controls.length > 0) {
+          codeStr += `\n` + controls.join("\n") + `\n`;
+        }
+
+        if (!cfg.autoScrollLyrics) codeStr += `  autoScrollLyrics: false,\n`;
+
+        codeStr += `\n  lyrics: \`\n${cfg.lyrics}\n  \`,\n`;
+
+        if (cfg.artistInformation) {
+          codeStr += `\n  artistInformation: {
+    active: true,
+    banner: "${cfg.artistInformation.banner}",
+    name: "${cfg.artistInformation.name}",
+    verified: true,
+    stats: "1M Monthly Listeners",
+    description: "Created dynamically using MusicEmbedAPI."
+  },`;
+        }
+
+        if (cfg.credits) {
+          codeStr += `\n\n  license: "${cfg.license}",
+  credits: {
+    active: true,
+    list: [
+      { role: "Vocalist", name: "${cfg.author}" },
+      { role: "Producer", name: "Studio XYZ" }
+    ]
+  },`;
+        }
+
+        if (cfg.share) {
+          codeStr += `\n\n  share: {
+    title: "${cfg.share.title}",
+    description: "${cfg.share.description}",
+    url: "${cfg.share.url}"
+  }`;
+        }
+
+        // Clean trailing comma logic
+        codeStr = codeStr.replace(/,\s*$/, "");
+        codeStr += `\n});`;
+
+        document.getElementById("code-output").textContent = codeStr;
+      }
+
+      // Tab Switch Logic
+      function switchTab(tab) {
+        const btnPreview = document.getElementById("tab-preview");
+        const btnCode = document.getElementById("tab-code");
+        const contentPreview = document.getElementById("content-preview");
+        const contentCode = document.getElementById("content-code");
+
+        if (tab === "preview") {
+          btnPreview.className =
+            "px-6 py-3 text-sm font-bold text-emerald-400 border-b-2 border-emerald-400 transition";
+          btnCode.className =
+            "px-6 py-3 text-sm font-bold text-slate-400 border-b-2 border-transparent hover:text-white transition";
+          contentPreview.classList.remove("hidden");
+          contentCode.classList.add("hidden");
+        } else {
+          btnCode.className =
+            "px-6 py-3 text-sm font-bold text-emerald-400 border-b-2 border-emerald-400 transition";
+          btnPreview.className =
+            "px-6 py-3 text-sm font-bold text-slate-400 border-b-2 border-transparent hover:text-white transition";
+          contentCode.classList.remove("hidden");
+          contentPreview.classList.add("hidden");
+        }
+      }
+
+      // Copy Code Functionality
+      function copyCode() {
+        const codeText = document.getElementById("code-output").textContent;
+        navigator.clipboard.writeText(codeText).then(() => {
+          alert("Code successfully copied to Clipboard!");
+        });
+      }
+    </script>
+  </body>
+</html>
