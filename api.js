@@ -1,7 +1,7 @@
 /**
  * MusicEmbedAPI
  * A modular audio player engine with lyrics support, time synchronization, and responsive UI.
- * @version 2.0.0
+ * @version 1.0.0
  * @author JPROJECT-1
  * @license MIT
  */
